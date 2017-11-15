@@ -1,13 +1,62 @@
 <template>
   <div id="app" class="_black _bg-white">
-    <router-view></router-view>
+    <router-view
+      :display-time="displayTime"
+      @startTimer="handleStart"
+      @stopTimer="clear(countdownInterval)"></router-view>
   </div>
 </template>
 
 <script>
-  export default {
-    name: 'borgadoro',
-  };
+export default {
+  name: 'borgadoro',
+  data() {
+    return {
+      countdownInterval: 0,
+      secondsLeft: 0,
+      timeToTrack: (25 * 60),
+      displayTime: '25:00',
+    };
+  },
+  methods: {
+    handleStart() {
+      if (this.secondsLeft <= 0) {
+        // this.timer(this.timeToTrack);
+        this.timer(5);
+      } else {
+        this.timer(this.secondsLeft);
+      }
+    },
+    timer(seconds) {
+      const now = Date.now();
+      const then = now + (seconds * 1000);
+
+      clearInterval(this.countdownInterval);
+      this.displayTimeLeft(seconds);
+
+      this.countdownInterval = setInterval(() => {
+        this.secondsLeft = Math.round((then - Date.now()) / 1000);
+
+        if (this.secondsLeft < 0) {
+          clearInterval(this.countdownInterval);
+          return;
+        }
+
+        this.displayTimeLeft(this.secondsLeft);
+      }, 1000);
+    },
+    clear(interval) {
+      clearInterval(interval);
+    },
+    displayTimeLeft(seconds) {
+      const minutes = Math.floor(seconds / 60);
+      const remainderSeconds = seconds % 60;
+      const display = `${minutes}:${remainderSeconds < 10 ? '0' : ''}${remainderSeconds}`;
+      this.displayTime = display;
+      console.log(display);
+    },
+  },
+};
 </script>
 
 <style>

@@ -1,7 +1,7 @@
 <template>
 <div class="grid vh-100 vw-100 tc">
   <p class="mb2 area-meta _gray f4 fw6 lh-copy">{{ count }} Pomodoro Today</p>
-  <h1 class="mt0 mb4 area-time f-headline fw2 lh-title">25:00</h1>
+  <h1 class="mt0 mb4 area-time f-headline fw2 lh-title">{{ displayTime }}</h1>
   <div class="area-actions">
     <button
       type="button"
@@ -76,6 +76,7 @@
 <script>
 export default {
   name: 'landing-page',
+  props: ['displayTime'],
   data() {
     return {
       count: 0,
@@ -100,6 +101,11 @@ export default {
     },
     handlePlay() {
       this.toggleActive();
+      if (this.isActive) {
+        this.$emit('startTimer');
+      } else {
+        this.$emit('stopTimer');
+      }
     },
   },
 };

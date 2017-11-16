@@ -1,6 +1,6 @@
 <template>
 <div class="grid vh-100 vw-100 tc">
-  <p class="mb2 area-meta _gray f4 fw6 lh-copy">{{ count }} Pomodoro Today</p>
+  <p class="mb2 area-meta _gray f4 fw6 lh-copy">{{ completed <= 1 ? `${completed} Pomodoro` : `${completed} Pomodoros` }} completed</p>
   <h1 class="mt0 mb4 area-time f-headline fw2 lh-title">{{ displayTime }}</h1>
   <div class="area-actions">
     <button
@@ -69,19 +69,15 @@
       Reset
     </button>
   </div>
-
 </div>
 </template>
 
 <script>
 export default {
   name: 'landing-page',
-  props: ['displayTime'],
+  props: ['displayTime', 'isActive', 'completed'],
   data() {
-    return {
-      count: 0,
-      isActive: false,
-    };
+    return {};
   },
   computed: {
     activeStyles() {
@@ -93,15 +89,12 @@ export default {
     },
   },
   methods: {
-    open(link) {
-      this.$electron.shell.openExternal(link);
-    },
     toggleActive() {
-      this.isActive = !this.isActive;
+      this.$emit('toggleActive');
     },
     handlePlay() {
       this.toggleActive();
-      if (this.isActive) {
+      if (!this.isActive) {
         this.$emit('startTimer');
       } else {
         this.$emit('stopTimer');

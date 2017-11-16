@@ -2,8 +2,11 @@
   <div id="app" class="_black _bg-white">
     <router-view
       :display-time="displayTime"
+      :is-active="isActive"
+      :completed="completed"
       @startTimer="handleStart"
-      @stopTimer="clear(countdownInterval)"></router-view>
+      @stopTimer="clear(countdownInterval)"
+      @toggleActive="toggleActive"></router-view>
   </div>
 </template>
 
@@ -16,6 +19,8 @@ export default {
       secondsLeft: 0,
       timeToTrack: (25 * 60),
       displayTime: '25:00',
+      isActive: false,
+      completed: 0,
     };
   },
   methods: {
@@ -27,18 +32,34 @@ export default {
         this.timer(this.secondsLeft);
       }
     },
+    toggleActive() {
+      this.isActive = !this.isActive;
+    },
+    addToCompleted() {
+      this.completed += 1;
+    },
+    finishTimer() {
+      this.clear(this.countdownInterval);
+      this.toggleActive();
+      this.addToCompleted();
+    },
+    reset() {
+      this.displayTimeLeft();
+    },
     timer(seconds) {
       const now = Date.now();
       const then = now + (seconds * 1000);
 
-      clearInterval(this.countdownInterval);
+      this.clear(this.countdownInterval);
+
       this.displayTimeLeft(seconds);
 
       this.countdownInterval = setInterval(() => {
         this.secondsLeft = Math.round((then - Date.now()) / 1000);
 
-        if (this.secondsLeft < 0) {
-          clearInterval(this.countdownInterval);
+        if (this.secondsLeft === 0) {
+          this.displayTimeLeft(this.secondsLeft);
+          this.finishTimer();
           return;
         }
 
@@ -52,8 +73,8 @@ export default {
       const minutes = Math.floor(seconds / 60);
       const remainderSeconds = seconds % 60;
       const display = `${minutes}:${remainderSeconds < 10 ? '0' : ''}${remainderSeconds}`;
+
       this.displayTime = display;
-      console.log(display);
     },
   },
 };

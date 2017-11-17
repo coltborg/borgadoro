@@ -48,7 +48,8 @@
     </button>
     <button
       type="button"
-      class="f4 fw2 bn br2 ph3 pv2 pointer inline-flex items-center _gray-shadow _gray _bg-white">
+      class="f4 fw2 bn br2 ph3 pv2 pointer inline-flex items-center _gray-shadow _gray _bg-white"
+      @click="handleReset">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 64 64"
@@ -99,6 +100,9 @@ export default {
       } else {
         this.$emit('stopTimer');
       }
+    },
+    handleReset() {
+      this.$emit('resetTimer');
     },
   },
 };

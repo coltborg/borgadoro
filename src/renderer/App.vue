@@ -6,7 +6,8 @@
       :completed="completed"
       @startTimer="handleStart"
       @stopTimer="clear(countdownInterval)"
-      @toggleActive="toggleActive"></router-view>
+      @toggleActive="toggleActive"
+      @resetTimer="handleReset"></router-view>
   </div>
 </template>
 
@@ -18,14 +19,26 @@ export default {
       countdownInterval: 0,
       secondsLeft: 0,
       timeToTrack: (25 * 60),
-      displayTime: '25:00',
+      displayTime: '',
       isActive: false,
       completed: 0,
     };
   },
+  mounted() {
+    this.displayTimeLeft(this.timeToTrack);
+  },
   methods: {
+    handleReset() {
+      this.clear(this.countdownInterval);
+      this.displayTimeLeft(this.timeToTrack);
+      this.secondsLeft = 0;
+      if (this.isActive) {
+        this.handleStart();
+      }
+    },
     handleStart() {
       if (this.secondsLeft <= 0) {
+        // TODO: Uncomment when done testing
         // this.timer(this.timeToTrack);
         this.timer(5);
       } else {
@@ -98,7 +111,7 @@ export default {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  /* !!! Remove this soon */
+  /* TODO: Remove this soon */
   outline: none;
 }
 

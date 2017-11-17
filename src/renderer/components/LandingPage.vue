@@ -44,7 +44,8 @@
           <path data-name="layer2" fill="currentColor" d="M12 4h12v56H12z"></path>
         </svg>
       </transition>
-      Start
+      <span v-if="!isActive">Start</span>
+      <span v-else>Pause</span>
     </button>
     <button
       type="button"

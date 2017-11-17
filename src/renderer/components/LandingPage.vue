@@ -1,49 +1,47 @@
 <template>
 <div class="grid vh-100 vw-100 tc">
-  <p class="mb2 area-meta _gray f4 fw6 lh-copy">{{ completed <= 1 ? `${completed} Pomodoro` : `${completed} Pomodoros` }} completed</p>
+  <p class="mb2 area-meta _gray f4 fw6 lh-copy">{{ amountCompleted <= 1 ? `${amountCompleted} Pomodoro` : `${amountCompleted} Pomodoros` }} completed</p>
   <h1 class="mt0 mb4 area-time f-headline fw2 lh-title">{{ displayTime }}</h1>
-  <div class="area-actions">
+  <div v-if="!isComplete" class="area-actions">
     <button
       type="button"
       class="mr3 f4 fw2 bn br2 ph3 pv2 pointer inline-flex items-center _gray-shadow _gray _bg-white _all-animate"
       :class="activeStyles"
       @click="handlePlay">
-      <transition name="fade" mode="out-in">
-        <svg
-          v-if="!isActive"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 64 64"
-          aria-labelledby="title"
-          aria-describedby="desc"
-          role="img"
-          xmlns:xlink="http://www.w3.org/1999/xlink"
-          width="16"
-          height="16"
-          style="width: 16px; height: 16px;"
-          class="mr2">
-          <title>Play</title>
-          <desc>A solid styled icon from Orion Icon Library.</desc>
-          <path data-name="layer1"
-          fill="currentColor" d="M6 2l52 30L6 62V2z"></path>
-        </svg>
-        <svg
-          v-else
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 64 64"
-          aria-labelledby="title"
-          aria-describedby="desc"
-          role="img"
-          xmlns:xlink="http://www.w3.org/1999/xlink"
-          width="16"
-          height="16"
-          style="width: 16px; height: 16px;"
-          class="mr2">
-          <title>Pause</title>
-          <desc>A solid styled icon from Orion Icon Library.</desc>
-          <path data-name="layer1" fill="currentColor" d="M40 4h12v56H40z"></path>
-          <path data-name="layer2" fill="currentColor" d="M12 4h12v56H12z"></path>
-        </svg>
-      </transition>
+      <svg
+        v-if="!isActive"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 64 64"
+        aria-labelledby="title"
+        aria-describedby="desc"
+        role="img"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        width="16"
+        height="16"
+        style="width: 16px; height: 16px;"
+        class="mr2">
+        <title>Play</title>
+        <desc>A solid styled icon from Orion Icon Library.</desc>
+        <path data-name="layer1"
+        fill="currentColor" d="M6 2l52 30L6 62V2z"></path>
+      </svg>
+      <svg
+        v-else
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 64 64"
+        aria-labelledby="title"
+        aria-describedby="desc"
+        role="img"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        width="16"
+        height="16"
+        style="width: 16px; height: 16px;"
+        class="mr2">
+        <title>Pause</title>
+        <desc>A solid styled icon from Orion Icon Library.</desc>
+        <path data-name="layer1" fill="currentColor" d="M40 4h12v56H40z"></path>
+        <path data-name="layer2" fill="currentColor" d="M12 4h12v56H12z"></path>
+      </svg>
       <span v-if="!isActive">Start</span>
       <span v-else>Pause</span>
     </button>
@@ -71,13 +69,37 @@
       Reset
     </button>
   </div>
+  <div v-else class="area-actions">
+    <button
+      type="button"
+      class="f4 fw2 bn br2 ph3 pv2 pointer inline-flex items-center _gray-shadow _black _bg-yellow _yellow-shadow wobble-hor-bottom"
+      @click="handleStop">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 64 64"
+        aria-labelledby="title"
+        aria-describedby="desc"
+        role="img"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        width="16"
+        height="16"
+        style=""
+        class="mr2">
+        <title>Stop</title>
+        <desc>A solid styled icon from Orion Icon Library.</desc>
+        <path data-name="layer1"
+        fill="currentColor" d="M8 8h48v48H8z"></path>
+      </svg>
+      Stop
+    </button>
+  </div>
 </div>
 </template>
 
 <script>
 export default {
   name: 'landing-page',
-  props: ['displayTime', 'isActive', 'completed'],
+  props: ['displayTime', 'isActive', 'isComplete', 'amountCompleted'],
   data() {
     return {};
   },
@@ -103,6 +125,9 @@ export default {
       }
     },
     handleReset() {
+      this.$emit('resetTimer');
+    },
+    handleStop() {
       this.$emit('resetTimer');
     },
   },

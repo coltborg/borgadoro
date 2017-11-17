@@ -3,7 +3,8 @@
     <router-view
       :display-time="displayTime"
       :is-active="isActive"
-      :completed="completed"
+      :is-complete="isComplete"
+      :amount-completed="amountCompleted"
       @startTimer="handleStart"
       @stopTimer="clear(countdownInterval)"
       @toggleActive="toggleActive"
@@ -21,7 +22,8 @@ export default {
       timeToTrack: (25 * 60),
       displayTime: '',
       isActive: false,
-      completed: 0,
+      isComplete: false,
+      amountCompleted: 0,
     };
   },
   mounted() {
@@ -30,6 +32,7 @@ export default {
   methods: {
     handleReset() {
       this.clear(this.countdownInterval);
+      this.toggleComplete();
       this.displayTimeLeft(this.timeToTrack);
       this.secondsLeft = 0;
       if (this.isActive) {
@@ -40,7 +43,7 @@ export default {
       if (this.secondsLeft <= 0) {
         // TODO: Uncomment when done testing
         // this.timer(this.timeToTrack);
-        this.timer(5);
+        this.timer(2);
       } else {
         this.timer(this.secondsLeft);
       }
@@ -48,12 +51,16 @@ export default {
     toggleActive() {
       this.isActive = !this.isActive;
     },
+    toggleComplete() {
+      this.isComplete = !this.isComplete;
+    },
     addToCompleted() {
-      this.completed += 1;
+      this.amountCompleted += 1;
     },
     finishTimer() {
       this.clear(this.countdownInterval);
       this.toggleActive();
+      this.toggleComplete();
       this.addToCompleted();
     },
     reset() {
@@ -107,6 +114,29 @@ export default {
   --peach: #ffc4A8;
 }
 
+@keyframes wobble-hor-bottom {
+  0%,
+  20% {
+    transform: translateX(0%);
+    transform-origin: 50% 50%;
+  }
+  3% {
+    transform: translateX(-30px) rotate(-6deg);
+  }
+  6% {
+    transform: translateX(15px) rotate(6deg);
+  }
+  9% {
+    transform: translateX(-15px) rotate(-3.6deg);
+  }
+  12% {
+    transform: translateX(9px) rotate(2.4deg);
+  }
+  15% {
+    transform: translateX(-6px) rotate(-1.2deg);
+  }
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -132,17 +162,20 @@ body {
 ._white { color: var(--white); }
 ._blue  { color: var(--blue); }
 
-._bg-black { background-color: var(--black); }
-._bg-white { background-color: var(--white); }
-._bg-gray  { background-color: var(--gray); }
-._bg-blue  { background-color: var(--blue); }
+._bg-black  { background-color: var(--black); }
+._bg-white  { background-color: var(--white); }
+._bg-gray   { background-color: var(--gray); }
+._bg-blue   { background-color: var(--blue); }
+._bg-purple { background-color: var(--purple); }
+._bg-yellow { background-color: var(--yellow); }
+._bg-peach  { background-color: var(--peach); }
 
-._hover-bg-black:hover { background-color: var(--black); }
-._hover-bg-white:hover { background-color: var(--white); }
-._hover-bg-gray:hover  { background-color: var(--gray); }
-._hover-bg-blue:hover  { background-color: var(--blue); }
-._hover-bg-purple:hover  { background-color: var(--purple); }
-._hover-bg-yellow:hover  { background-color: var(--yellow); }
+._hover-bg-black:hover  { background-color: var(--black); }
+._hover-bg-white:hover  { background-color: var(--white); }
+._hover-bg-gray:hover   { background-color: var(--gray); }
+._hover-bg-blue:hover   { background-color: var(--blue); }
+._hover-bg-purple:hover { background-color: var(--purple); }
+._hover-bg-yellow:hover { background-color: var(--yellow); }
 ._hover-bg-peach:hover  { background-color: var(--peach); }
 
 ._bg-animate { transition: background-color 150ms ease-out; }
@@ -152,12 +185,15 @@ body {
 
 ._gray-shadow { box-shadow: 0 0.25rem 1rem 0.25rem rgba(143, 150, 152, 0.25); }
 ._blue-shadow { box-shadow: 0 0.25rem 1rem 0.25rem rgba(0, 136, 255, 0.25); }
+._yellow-shadow { box-shadow: 0 0.25rem 1rem 0.25rem rgba(255, 197, 36, 0.25); }
+
+.wobble-hor-bottom { animation: wobble-hor-bottom 3s infinite both; }
 
 .fade-enter-active {
-  transition: all 150ms ease-out;
+  transition: all 300ms ease-out;
 }
 .fade-leave-active {
-  transition: all 150ms ease-out;
+  transition: all 300ms ease-out;
 }
 .fade-enter, .fade-leave-to {
   opacity: 0;

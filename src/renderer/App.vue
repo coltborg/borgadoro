@@ -105,6 +105,7 @@ export default {
       this.toggleProgress();
       this.toggleComplete();
       this.addToCompleted();
+      this.handleNotification();
     },
     displayTimeLeft(seconds) {
       const minutes = Math.floor(seconds / 60);
@@ -112,6 +113,17 @@ export default {
       const display = `${minutes}:${remainderSeconds < 10 ? '0' : ''}${remainderSeconds}`;
 
       this.displayTime = display;
+    },
+    handleNotification() {
+      /* eslint-disable no-unused-vars */
+      const myNotification =
+        new Notification(
+          'Pomodoro complete!',
+          {
+            body: `Your ${this.timeToTrack / 60} minute timer has finished.`,
+            requireInteraction: true,
+          },
+        );
     },
   },
 };

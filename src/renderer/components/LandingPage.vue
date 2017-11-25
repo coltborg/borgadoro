@@ -46,6 +46,7 @@
       <span v-else>Pause</span>
     </button>
     <button
+      v-if="!isActive && inProgress"
       type="button"
       class="f4 fw2 bn br2 ph3 pv2 pointer inline-flex items-center _gray-shadow _gray _bg-white"
       @click="handleReset">
@@ -99,7 +100,7 @@
 <script>
 export default {
   name: 'landing-page',
-  props: ['displayTime', 'isActive', 'isComplete', 'amountCompleted'],
+  props: ['displayTime', 'isActive', 'isComplete', 'amountCompleted', 'inProgress'],
   data() {
     return {};
   },
@@ -125,7 +126,7 @@ export default {
       }
     },
     handleReset() {
-      this.$emit('resetTimer');
+      this.$emit('resetButton');
     },
     handleStop() {
       this.$emit('resetTimer');

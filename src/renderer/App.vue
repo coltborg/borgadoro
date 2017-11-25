@@ -4,11 +4,13 @@
       :display-time="displayTime"
       :is-active="isActive"
       :is-complete="isComplete"
+      :in-progress="inProgress"
       :amount-completed="amountCompleted"
       @startTimer="handleStart"
-      @stopTimer="clear(countdownInterval)"
+      @resetButton="handleReset"
+      @stopTimer="handleStop"
       @toggleActive="toggleActive"
-      @resetTimer="handleReset"></router-view>
+      @resetTimer="resetTimer"></router-view>
   </div>
 </template>
 
@@ -21,6 +23,7 @@ export default {
       secondsLeft: 0,
       timeToTrack: (25 * 60),
       displayTime: '',
+      inProgress: false,
       isActive: false,
       isComplete: false,
       amountCompleted: 0,
@@ -30,15 +33,6 @@ export default {
     this.displayTimeLeft(this.timeToTrack);
   },
   methods: {
-    handleReset() {
-      this.clear(this.countdownInterval);
-      this.toggleComplete();
-      this.displayTimeLeft(this.timeToTrack);
-      this.secondsLeft = 0;
-      if (this.isActive) {
-        this.handleStart();
-      }
-    },
     handleStart() {
       if (this.secondsLeft <= 0) {
         // TODO: Uncomment when done testing
@@ -48,8 +42,20 @@ export default {
         this.timer(this.secondsLeft);
       }
     },
+    handleReset() {
+      this.clear(this.countdownInterval);
+      this.toggleProgress();
+      this.displayTimeLeft(this.timeToTrack);
+      this.secondsLeft = 0;
+    },
+    handleStop() {
+      this.clear(this.countdownInterval);
+    },
     toggleActive() {
       this.isActive = !this.isActive;
+    },
+    toggleProgress() {
+      this.inProgress = !this.inProgress;
     },
     toggleComplete() {
       this.isComplete = !this.isComplete;
@@ -57,14 +63,11 @@ export default {
     addToCompleted() {
       this.amountCompleted += 1;
     },
-    finishTimer() {
-      this.clear(this.countdownInterval);
-      this.toggleActive();
-      this.toggleComplete();
-      this.addToCompleted();
-    },
     reset() {
       this.displayTimeLeft();
+    },
+    clear(interval) {
+      clearInterval(interval);
     },
     timer(seconds) {
       const now = Date.now();
@@ -73,6 +76,10 @@ export default {
       this.clear(this.countdownInterval);
 
       this.displayTimeLeft(seconds);
+
+      if (!this.inProgress) {
+        this.toggleProgress();
+      }
 
       this.countdownInterval = setInterval(() => {
         this.secondsLeft = Math.round((then - Date.now()) / 1000);
@@ -86,8 +93,18 @@ export default {
         this.displayTimeLeft(this.secondsLeft);
       }, 1000);
     },
-    clear(interval) {
-      clearInterval(interval);
+    resetTimer() {
+      this.clear(this.countdownInterval);
+      this.toggleComplete();
+      this.displayTimeLeft(this.timeToTrack);
+      this.secondsLeft = 0;
+    },
+    finishTimer() {
+      this.clear(this.countdownInterval);
+      this.toggleActive();
+      this.toggleProgress();
+      this.toggleComplete();
+      this.addToCompleted();
     },
     displayTimeLeft(seconds) {
       const minutes = Math.floor(seconds / 60);

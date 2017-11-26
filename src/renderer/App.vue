@@ -124,6 +124,9 @@ export default {
             requireInteraction: true,
           },
         );
+      myNotification.onclick = () => {
+        this.resetTimer();
+      };
     },
   },
 };

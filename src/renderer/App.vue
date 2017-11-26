@@ -1,5 +1,6 @@
 <template>
   <div id="app" class="_black _bg-white">
+    <title-bar></title-bar>
     <router-view
       :display-time="displayTime"
       :is-active="isActive"
@@ -15,8 +16,13 @@
 </template>
 
 <script>
+import TitleBar from './components/TitleBar';
+
 export default {
   name: 'borgadoro',
+  components: {
+    TitleBar,
+  },
   data() {
     return {
       countdownInterval: 0,
@@ -144,6 +150,7 @@ export default {
   --purple: #7349ff;
   --yellow: #ffc524;
   --peach: #ffc4A8;
+  --title-bar-height: 1.5rem;
 }
 
 @keyframes wobble-hor-bottom {

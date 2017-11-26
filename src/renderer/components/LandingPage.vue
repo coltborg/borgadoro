@@ -1,5 +1,5 @@
 <template>
-<div class="grid vh-100 vw-100 tc">
+<div class="grid landing-page--height vw-100 tc">
   <p class="mb2 area-meta _gray f4 fw6 lh-copy">{{ amountCompleted <= 1 ? `${amountCompleted} Pomodoro` : `${amountCompleted} Pomodoros` }} completed</p>
   <h1 class="mt0 mb4 area-time f-headline fw2 lh-title">{{ displayTime }}</h1>
   <div v-if="!isComplete" class="area-actions">
@@ -135,7 +135,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .grid {
   display: grid;
   grid-template-areas: "meta" "time" "actions";
@@ -148,4 +148,8 @@ export default {
 .area-meta { grid-area: meta; }
 .area-time { grid-area: time; }
 .area-actions { grid-area: actions; }
+
+.landing-page--height {
+  height: calc(100vh - var(--title-bar-height));
+}
 </style>

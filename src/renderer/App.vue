@@ -12,10 +12,21 @@
       @stopTimer="handleStop"
       @toggleActive="toggleActive"
       @resetTimer="resetTimer"></router-view>
+    <button
+      type="button"
+      @click="turnSoundOn">
+      Turn On
+    </button>
+    <button
+      type="button"
+      @click="turnSoundOff">
+      Turn Off
+    </button>
   </div>
 </template>
 
 <script>
+import Tone from 'tone';
 import TitleBar from './components/TitleBar';
 
 export default {
@@ -33,7 +44,25 @@ export default {
       isActive: false,
       isComplete: false,
       amountCompleted: 0,
+      sound: '',
     };
+  },
+  created() {
+    const audio = new Tone.PolySynth({
+      oscillator: {
+        type: 'triangle4',
+      },
+      envelope: {
+        attack: 1,
+        decay: 1.5,
+        sustain: 0.4,
+        release: 1,
+      },
+    }).toMaster();
+
+    new Tone.Loop((() => {
+      audio.triggerAttackRelease(['G4', 'B4', 'D4', 'F#4'], ['2n']);
+    }), '1n').start(0);
   },
   mounted() {
     this.displayTimeLeft(this.timeToTrack);
@@ -112,6 +141,7 @@ export default {
       this.toggleComplete();
       this.addToCompleted();
       this.handleNotification();
+      this.turnSoundOn();
     },
     displayTimeLeft(seconds) {
       const minutes = Math.floor(seconds / 60);
@@ -133,6 +163,12 @@ export default {
       myNotification.onclick = () => {
         this.resetTimer();
       };
+    },
+    turnSoundOn() {
+      Tone.Transport.start();
+    },
+    turnSoundOff() {
+      Tone.Transport.stop();
     },
   },
 };

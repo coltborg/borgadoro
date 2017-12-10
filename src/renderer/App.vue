@@ -12,16 +12,6 @@
       @stopTimer="handleStop"
       @toggleActive="toggleActive"
       @resetTimer="resetTimer"></router-view>
-    <button
-      type="button"
-      @click="turnSoundOn">
-      Turn On
-    </button>
-    <button
-      type="button"
-      @click="turnSoundOff">
-      Turn Off
-    </button>
   </div>
 </template>
 
@@ -130,6 +120,7 @@ export default {
     },
     resetTimer() {
       this.clear(this.countdownInterval);
+      this.turnSoundOff();
       this.toggleComplete();
       this.displayTimeLeft(this.timeToTrack);
       this.secondsLeft = 0;
